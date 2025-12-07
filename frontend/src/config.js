@@ -1,0 +1,4 @@
+const isDev = import.meta.env.MODE === 'development';
+const API_URL = import.meta.env.VITE_API_URL || (isDev ? 'http://localhost:5000' : '');
+
+export default API_URL;
