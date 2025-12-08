@@ -79,8 +79,10 @@ function Home() {
                 console.log("[Client] Sending token:", token.substring(0, 10) + "...");
             } else {
                 console.log("[Client] No token found in localStorage");
+                console.log("[Client] No token found in localStorage");
             }
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Define API_URL locally if needed or use imported
+            // API_URL is imported from ../config
+
 
 
             const response = await axios.post(`${API_URL}/api/generate`, {
@@ -181,6 +183,13 @@ function Home() {
 
     return (
         <div className="flex flex-col h-screen bg-transparent text-slate-100 font-sans selection:bg-primary/30">
+            {/* DEBUG OVERLAY - TODO: Remove after fixing UI freeze */}
+            <div className="fixed top-0 left-0 bg-red-500 text-white z-[100] text-xs p-2 opacity-90">
+                <button className="border border-white px-2 mr-2 bg-red-700" onClick={() => alert("Click Works!")}>Test Click</button>
+                LimitModal: {String(showLimitModal)} | DeleteModal: {String(showDeleteModal)} |
+                L-Sidebar: {String(isLeftSidebarOpen)} | R-Sidebar: {String(isRightSidebarOpen)} |
+                Generating: {String(isGenerating)} | Token: {String(!!localStorage.getItem('token'))}
+            </div>
             {/* Global Header */}
             <div className="w-full py-6 flex justify-center items-center z-50 bg-transparent flex-shrink-0">
                 <h1 className="text-2xl font-bold tracking-tight text-white hover:opacity-90 transition-opacity cursor-pointer" onClick={() => navigate('/')}>
@@ -259,7 +268,7 @@ function Home() {
                     )
                 }
 
-                <div className="flex-1 flex flex-col h-full bg-slate-950/50 backdrop-blur-sm pt-16 md:pt-0">
+                <div className="flex-1 flex flex-col h-full bg-slate-950/50 pt-16 md:pt-0">
                     <ControlBar
                         language={language}
                         setLanguage={setLanguage}
@@ -279,10 +288,7 @@ function Home() {
 
                     {/* Main Content Area - Stack on mobile, side-by-side on desktop */}
                     <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden p-2 md:p-4 gap-4">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
+                        <div
                             className="flex-1 flex flex-col min-h-[300px] md:min-h-0 min-w-0"
                         >
                             <div className="mb-2 text-sm font-medium text-slate-400 flex justify-between">
@@ -293,17 +299,14 @@ function Home() {
                                 value={inputCode}
                                 onChange={(val) => setInputCode(val)}
                             />
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.2 }}
+                        <div
                             className="flex-1 flex flex-col min-h-[300px] md:min-h-0 min-w-0"
                         >
                             <div className="mb-2 text-sm font-medium text-slate-400">Generated Docstring</div>
                             <OutputViewer docstring={outputDocstring} language="markdown" />
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
 
