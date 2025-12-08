@@ -76,8 +76,12 @@ function Home() {
 
             if (token) {
                 config.headers['x-auth-token'] = token;
+                console.log("[Client] Sending token:", token.substring(0, 10) + "...");
+            } else {
+                console.log("[Client] No token found in localStorage");
             }
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Define API_URL locally if needed or use imported
+
 
             const response = await axios.post(`${API_URL}/api/generate`, {
                 code: inputCode,
