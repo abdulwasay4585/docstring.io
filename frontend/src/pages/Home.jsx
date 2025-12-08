@@ -183,13 +183,6 @@ function Home() {
 
     return (
         <div className="flex flex-col h-screen bg-transparent text-slate-100 font-sans selection:bg-primary/30">
-            {/* DEBUG OVERLAY - TODO: Remove after fixing UI freeze */}
-            <div className="fixed top-0 left-0 bg-red-500 text-white z-[100] text-xs p-2 opacity-90">
-                <button className="border border-white px-2 mr-2 bg-red-700" onClick={() => alert("Click Works!")}>Test Click</button>
-                LimitModal: {String(showLimitModal)} | DeleteModal: {String(showDeleteModal)} |
-                L-Sidebar: {String(isLeftSidebarOpen)} | R-Sidebar: {String(isRightSidebarOpen)} |
-                Generating: {String(isGenerating)} | Token: {String(!!localStorage.getItem('token'))}
-            </div>
             {/* Global Header */}
             <div className="w-full py-6 flex justify-center items-center z-50 bg-transparent flex-shrink-0">
                 <h1 className="text-2xl font-bold tracking-tight text-white hover:opacity-90 transition-opacity cursor-pointer" onClick={() => navigate('/')}>
