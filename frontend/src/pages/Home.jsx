@@ -110,7 +110,13 @@ function Home() {
             console.error("Generation failed", error);
             if (error.response) {
                 if (error.response.status === 429) {
-                    setShowLimitModal(true);
+                    // Only show Guest Limit Modal if user is NOT logged in
+                    if (!localStorage.getItem('token')) {
+                        setShowLimitModal(true);
+                    } else {
+                        // User is logged in but hit a limit (Free tier daily limit or Rate Limit)
+                        setError(error.response.data.error || "You have reached your limit. Please upgrade or try again later.");
+                    }
                 } else if (error.response.status === 401) {
                     // Token invalid/expired
                     localStorage.removeItem('token');

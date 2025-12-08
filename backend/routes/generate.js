@@ -12,7 +12,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // RPM Limiter: 5 requests per minute
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 5,
+    max: 20,
     message: { error: 'Too many requests, please try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
