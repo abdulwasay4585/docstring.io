@@ -9,7 +9,6 @@ const auth = (req, res, next) => {
         req.user = decoded.user;
         next();
     } catch (err) {
-        console.error("Auth Middleware Error:", err.message);
         res.status(401).json({ error: 'Token is not valid' });
     }
 };

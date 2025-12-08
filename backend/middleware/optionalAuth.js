@@ -13,7 +13,6 @@ const optionalAuth = (req, res, next) => {
         req.user = decoded.user;
         next();
     } catch (err) {
-        console.error("OptionalAuth Error:", err.message);
         res.status(401).json({ msg: 'Token is not valid' });
     }
 };

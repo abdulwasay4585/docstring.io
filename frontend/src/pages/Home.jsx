@@ -76,10 +76,6 @@ function Home() {
 
             if (token) {
                 config.headers['x-auth-token'] = token;
-                console.log("[Client] Sending token:", token.substring(0, 10) + "...");
-            } else {
-                console.log("[Client] No token found in localStorage");
-                console.log("[Client] No token found in localStorage");
             }
             // API_URL is imported from ../config
 
