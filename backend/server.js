@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/api/generate', require('./routes/generate'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
-app.get('/', (req, res) => {
+app.get('/api/status', (req, res) => {
     res.send('Docstring.io API is running');
 });
 
