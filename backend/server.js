@@ -26,12 +26,20 @@ app.get('/api/status', (req, res) => {
 });
 
 // Serve static assets in production
+console.log(`Node Environment: ${process.env.NODE_ENV}`);
 if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    const staticPath = path.join(__dirname, '../frontend/dist');
+    console.log(`Serving static files from: ${staticPath}`);
 
-    app.get(/.*/, (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
+    // Set static folder
+    app.use(express.static(staticPath));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(staticPath, 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('API is running in Development Mode');
     });
 }
 
