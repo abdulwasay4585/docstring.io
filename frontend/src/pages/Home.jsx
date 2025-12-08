@@ -27,23 +27,30 @@ function Home() {
     useEffect(() => {
         const fetchUserDataAndHistory = async () => {
             const token = localStorage.getItem('token');
-            if (!token) return;
+            const config = token ? { headers: { 'x-auth-token': token } } : {};
 
             try {
-                const config = { headers: { 'x-auth-token': token } };
+                // Fetch User if token exists
+                if (token) {
+                    try {
+                        const userRes = await axios.get(`${API_URL}/api/auth/me`, config);
+                        setUser(userRes.data);
+                    } catch (err) {
+                        console.error("Failed to fetch user", err);
+                        if (err.response && err.response.status === 401) {
+                            // Token invalid, clear it
+                            localStorage.removeItem('token');
+                            navigate('/login');
+                            return; // Stop here if auth failed
+                        }
+                    }
+                }
 
-                // Fetch User
-                const userRes = await axios.get(`${API_URL}/api/auth/me`, config);
-                setUser(userRes.data);
-
-                // Fetch History
+                // Fetch History (always, works for guest too now)
                 const historyRes = await axios.get(`${API_URL}/api/generate/history`, config);
                 setHistory(historyRes.data);
             } catch (err) {
                 console.error("Failed to fetch data", err);
-                if (err.response && err.response.status === 401) {
-                    navigate('/login');
-                }
             }
         };
 

@@ -117,9 +117,30 @@ router.post('/', [optionalAuth, apiLimiter], async (req, res) => {
 // @route   GET api/generate/history
 // @desc    Get user's generation history
 // @access  Private
-router.get('/history', auth, async (req, res) => {
+router.get('/history', optionalAuth, async (req, res) => {
     try {
-        const history = await Generation.find({ userId: req.user.id })
+        let query = {};
+
+        if (req.user) {
+            query = { userId: req.user.id };
+        } else {
+            // If guest, search by IP and ensure no userId is associated (or userId matches the guest user found by IP)
+            // Ideally, we want generations created by this IP.
+            // But wait, our save logic:
+            // const generation = new Generation({ userId: user._id, ... })
+            // Even guests have a User document.
+
+            const ip = req.ip || req.connection.remoteAddress;
+            const guestUser = await User.findOne({ ipAddress: ip, email: null });
+
+            if (guestUser) {
+                query = { userId: guestUser._id };
+            } else {
+                return res.json([]); // No guest user found for this IP
+            }
+        }
+
+        const history = await Generation.find(query)
             .sort({ createdAt: -1 });
         res.json(history);
     } catch (err) {
