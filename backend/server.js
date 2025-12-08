@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
     // Set static folder
     app.use(express.static(staticPath));
 
-    app.get('(.*)', (req, res) => {
+    app.get(/.*/, (req, res) => {
         res.sendFile(path.resolve(staticPath, 'index.html'));
     });
 } else {
