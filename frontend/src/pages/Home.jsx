@@ -111,6 +111,11 @@ function Home() {
             if (error.response) {
                 if (error.response.status === 429) {
                     setShowLimitModal(true);
+                } else if (error.response.status === 401) {
+                    // Token invalid/expired
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('role');
+                    navigate('/login');
                 } else if (error.response.status === 403) {
                     setError(error.response.data.error || "Your current plan does not support this feature. Please upgrade.");
                 } else {

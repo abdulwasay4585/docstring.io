@@ -13,11 +13,7 @@ const optionalAuth = (req, res, next) => {
         req.user = decoded.user;
         next();
     } catch (err) {
-        // If token is invalid, treat as guest (or should we error? Safer to treat as guest for now to avoid blocking)
-        // But invalid token might mean expired session.
-        // Let's set user null.
-        req.user = null;
-        next();
+        res.status(401).json({ msg: 'Token is not valid' });
     }
 };
 
