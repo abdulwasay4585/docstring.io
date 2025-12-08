@@ -18,9 +18,14 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+
 router.post('/', [optionalAuth, apiLimiter], async (req, res) => {
     const { code, language, style } = req.body;
     const ip = req.ip || req.connection.remoteAddress;
+
+    console.log(`[Generate] Request from IP: ${ip}`);
+    console.log(`[Generate] Auth Token Present: ${!!req.header('x-auth-token')}`);
+    console.log(`[Generate] req.user: ${JSON.stringify(req.user)}`);
 
     if (!code) {
         return res.status(400).json({ error: 'Code is required' });
@@ -32,6 +37,10 @@ router.post('/', [optionalAuth, apiLimiter], async (req, res) => {
 
         if (req.user) {
             user = await User.findById(req.user.id);
+            if (!user) {
+                // Token valid but user does not exist (deleted?)
+                return res.status(401).json({ error: 'User account not found. Please log in again.' });
+            }
         }
 
         // If no logged in user found, or no token provided, look up by IP (Guest)
@@ -47,6 +56,8 @@ router.post('/', [optionalAuth, apiLimiter], async (req, res) => {
         if (!user) {
             user = new User({ ipAddress: ip, role: 'guest' });
         }
+
+        console.log(`[Generate] Resolved User ID: ${user._id}, Role: ${user.role}, Plan: ${user.plan}, Count: ${user.generationsCount}`);
 
         // Reset daily count if needed
         const now = new Date();
